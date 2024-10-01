@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int             @id @default(autoincrement())
+  username             String          @unique @map("user_name")
+  email                String          @unique
+  password             String
+  role                 Role            @default(USER)
+  createdAt            DateTime        @default(now()) @map("created_at")
+  updatedAt            DateTime        @updatedAt @map("updated_at")
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+  userProgress         UserProgress[]
+  searchHistory        SearchHistory[]
+  favorites            Favorite[]
+  lessons              Lesson[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model UserProgress {
+  id          Int       @id @default(autoincrement())
+  score       Int?
+  attempts    Int?
+  completedAt DateTime? @default(now()) @map("completed_at")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int       @map("user_id")
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId    Int       @map("lesson_id")
+
+  @@unique([userId, lessonId])
+}
+
+model Lesson {
+  id           Int            @id @default(autoincrement())
+  lessonName   String         @unique @map("lesson_name")
+  image        String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
+  userProgress UserProgress[]
+  questions    Questions[]
+  User         User?          @relation(fields: [userId], references: [id])
+  userId       Int?
+}
+
+model SearchHistory {
+  id         Int      @id @default(autoincrement())
+  searchTerm String   @map("search_term")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+}
+
+model Questions {
+  id            Int     @id @default(autoincrement())
+  question      String
+  image         String?
+  option1       String
+  option2       String
+  correctOption String  @map("correct_option")
+  lesson        Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId      Int     @map("lesson_id")
+}
+
+model Vocabulary {
+    id          Int        @id @default(autoincrement())
+    wordTh      String     @map("word_th")
+    wordEs      String     @map("word_es")
+    image       String
+    category    Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    categoryId  Int        @map("category_id")
+    favorites   Favorite[]
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @default(now()) @updatedAt
+}
+
+model Category {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  image      String
+  vocabulary Vocabulary[]
+}
+
+model Favorite {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now()) @map("created_at")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  vocabulary   Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+  vocabularyId Int
+}
+  
