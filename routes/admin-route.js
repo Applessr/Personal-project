@@ -11,7 +11,7 @@ router.patch('/user-list/:userId', adminController.updateUserRole);
 // Vocabulary Management
 router.get('/vocabulary', adminController.getVocabList); 
 router.post('/vocabulary', adminController.addVocabulary); 
-// router.put('/vocabulary/:id', adminController.updateVocabulary); 
+router.put('/vocabulary/:id', adminController.updateVocabulary); 
 router.delete('/vocabulary/:id', adminController.deleteVocabulary);
 
 

@@ -85,7 +85,18 @@ authServices.createUser = (data) => {
 //         }
 //     });
 // };
-
-
+authServices.getCurrentUser = (email) => {
+    return prisma.user.findUnique({
+        where: {
+            email: email,
+        },
+        select: {
+            id: true,
+            username: true,
+            email: true,
+            role: true,
+        },
+    });
+};
 
 module.exports = authServices;

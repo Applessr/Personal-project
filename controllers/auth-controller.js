@@ -2,7 +2,8 @@ const authController = {};
 const createError = require('../utils/createError');
 const authServices = require('../services/auth-service');
 const hashServices = require('../services/hash-service');
-const jwtServices = require('../services/jwt-services')
+const jwtServices = require('../services/jwt-services');
+const prisma = require('../config/prisma');
 
 
 authController.register = async(req,res,next) => {
@@ -27,25 +28,38 @@ authController.register = async(req,res,next) => {
     }
 };
 
-authController.login = async(req, res, next) => {
+authController.login = async (req, res, next) => {
     try {
-        const {username,email,password} = req.body;
-        let user;
-        if (email) {
-            user = await authServices.getEmail(email);
-        } else if (username) {
-            user = await authServices.getUsername(username);
+        const { identifier, password } = req.body; 
+
+        let usernameOrEmailKey = '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (emailRegex.test(identifier)) {
+            usernameOrEmailKey = 'email';
+        } else {
+            usernameOrEmailKey = 'username';
         }
 
-        if(!user) {
-            return createError(400,'Username or Email does not exist')
+
+        const user = await prisma.user.findUnique({
+            where: {
+                [usernameOrEmailKey]: identifier,
+            },
+        });
+
+        if (!user) {
+            return next(createError(400, 'User not found'));
         }
 
-        const isMatch = await hashServices.compare( password, user.password );
+   
+        const isMatch = await hashServices.compare(password, user.password);
 
         if (!isMatch) {
-            return createError(400, 'Password incorrect')
+            return next(createError(400, 'Password incorrect'));
         }
+
+
         const payload = {
             user: {
                 id: user.id,
@@ -55,17 +69,17 @@ authController.login = async(req, res, next) => {
             },
         };
 
-        const accessToken = jwtServices.sign({id: user.id})
-        console.log(accessToken)
-    
-        res.json({ 
+        const accessToken = jwtServices.sign({ id: user.id });
+
+        res.json({
+            message: 'Login successful',
             user: payload,
-            token: accessToken, 
+            token: accessToken,
         });
-        
+
     } catch (err) {
-        console.log('error from login',err)
-        next(err)
+        console.log('Error from login:', err);
+        next(err); 
     }
 };
 
@@ -111,6 +125,21 @@ authController.resetPassword = async (req, res, next) => {
         res.json({ message: 'Password has been reset successfully' });
     } catch (err) {
         console.log('error from resetPassword', err);
+        next(err);
+    }
+};
+authController.currentUser = async (req, res, next) => {
+    try {
+        const email = req.user.email;
+        const member = await authServices.getCurrentUser(email);
+        
+        if (!member) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        console.log(member);
+        res.json({ member });
+    } catch (err) {
         next(err);
     }
 };
