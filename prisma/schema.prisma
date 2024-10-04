@@ -26,7 +26,6 @@ model User {
   userProgress         UserProgress[]
   searchHistory        SearchHistory[]
   favorites            Favorite[]
-  lessons              Lesson[]
 }
 
 enum Role {
@@ -50,13 +49,11 @@ model UserProgress {
 model Lesson {
   id           Int            @id @default(autoincrement())
   lessonName   String         @unique @map("lesson_name")
-  image        String
+  image        String         @db.Text
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now()) @updatedAt
   userProgress UserProgress[]
   questions    Questions[]
-  User         User?          @relation(fields: [userId], references: [id])
-  userId       Int?
 }
 
 model SearchHistory {
@@ -70,7 +67,7 @@ model SearchHistory {
 model Questions {
   id            Int     @id @default(autoincrement())
   question      String
-  image         String?
+  image         String? @db.Text
   option1       String
   option2       String
   correctOption String  @map("correct_option")
@@ -79,21 +76,21 @@ model Questions {
 }
 
 model Vocabulary {
-    id          Int        @id @default(autoincrement())
-    wordTh      String     @map("word_th")
-    wordEs      String     @map("word_es")
-    image       String
-    category    Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-    categoryId  Int        @map("category_id")
-    favorites   Favorite[]
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @default(now()) @updatedAt
+  id         Int        @id @default(autoincrement())
+  wordTh     String     @map("word_th")
+  wordEs     String     @map("word_es")
+  image      String     @db.Text
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int        @map("category_id")
+  favorites  Favorite[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now()) @updatedAt
 }
 
 model Category {
   id         Int          @id @default(autoincrement())
   name       String       @unique
-  image      String
+  image      String       @db.Text
   vocabulary Vocabulary[]
 }
 
@@ -105,4 +102,3 @@ model Favorite {
   vocabulary   Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
   vocabularyId Int
 }
-  

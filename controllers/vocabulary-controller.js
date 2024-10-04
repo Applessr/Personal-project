@@ -13,9 +13,9 @@ vocabularyController.getVocabCategory = async(req,res,next) => {
     }
 }
 vocabularyController.getVocabCategoryId = async(req,res,next) => {
-    const { id } = req.params; 
+    const { vocabularyId } = req.params; 
     try {
-        const getVocabByCategoryId = await vocabServices.getVocabCategoryId(id);
+        const getVocabByCategoryId = await vocabServices.getVocabCategoryId(vocabularyId);
         if (!getVocabByCategoryId) {
             return createError(400, 'vocabulary not found')
         }

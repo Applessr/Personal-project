@@ -26,8 +26,8 @@ userController.getUserInfo = async(req,res,next) => {
 }
 userController.updateUserInfo = async (req, res, next) => {
     try {
-        const { userId, username, email, currentPassword, newPassword, confirmPassword } = req.body;
-
+        const userId = req.user.id;
+        const {  username, email, currentPassword, newPassword, confirmPassword } = req.body;
         if (!userId) {
             return next(createError(400, 'User ID should be provided'));
         }
@@ -62,8 +62,9 @@ userController.updateUserInfo = async (req, res, next) => {
 
             updatedData.password = await hashServices.hash(newPassword);
         }
-
         const updatedUser = await userServices.updateUser(userId, updatedData);
+        
+        delete updatedUser.password;
 
         res.json({ user: updatedUser });
     } catch (err) {

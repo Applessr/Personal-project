@@ -16,9 +16,9 @@ lessonController.getAllLessons = async (req, res, next) => {
 
 
 lessonController.getLessonById = async (req, res, next) => {
-    const { id } = req.params; 
+    const { lessonsId } = req.params; 
     try {
-        const lesson = await lessonServices.getLessonById(id); 
+        const lesson = await lessonServices.getLessonById(lessonsId); 
         if (!lesson) {
             return createError(400,'Lesson not found'); 
         }

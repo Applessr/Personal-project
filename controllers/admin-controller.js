@@ -51,9 +51,8 @@ adminController.updateVocabulary = async(req,res,next) => {
     }
 }
 adminController.deleteVocabulary = async (req, res, next) => {
-    const { id } = req.params;
-
     try {
+        const { id } = req.params;
         if (!id) {
             return res.status(400).json({ message: 'Vocabulary ID is required' });
         }
