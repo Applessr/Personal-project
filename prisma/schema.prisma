@@ -101,4 +101,6 @@ model Favorite {
   userId       Int
   vocabulary   Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
   vocabularyId Int
+
+  @@unique([userId, vocabularyId]) 
 }

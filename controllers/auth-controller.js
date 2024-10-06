@@ -4,11 +4,12 @@ const authServices = require('../services/auth-service');
 const hashServices = require('../services/hash-service');
 const jwtServices = require('../services/jwt-services');
 const prisma = require('../config/prisma');
+const { sendResetEmail } = require('../services/mailer');
 
 
-authController.register = async(req,res,next) => {
+authController.register = async (req, res, next) => {
     try {
-        const {username,email,password} = req.input;
+        const { username, email, password } = req.input;
 
         const user = await authServices.getEmail(email);
 
@@ -18,11 +19,11 @@ authController.register = async(req,res,next) => {
 
         const hashPassword = await hashServices.hash(password);
 
-        const result = await authServices.createUser({username,email,password: hashPassword})
+        const result = await authServices.createUser({ username, email, password: hashPassword })
 
         console.log(result)
-        res.json({username, email})
-    } catch(err) {
+        res.json({ username, email })
+    } catch (err) {
         console.log('Error from register', err)
         next(err);
     }
@@ -30,7 +31,7 @@ authController.register = async(req,res,next) => {
 
 authController.login = async (req, res, next) => {
     try {
-        const { identifier, password } = req.body; 
+        const { identifier, password } = req.body;
 
         let usernameOrEmailKey = '';
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,7 +41,6 @@ authController.login = async (req, res, next) => {
         } else {
             usernameOrEmailKey = 'username';
         }
-
 
         const user = await prisma.user.findUnique({
             where: {
@@ -52,13 +52,11 @@ authController.login = async (req, res, next) => {
             return next(createError(400, 'User not found'));
         }
 
-   
         const isMatch = await hashServices.compare(password, user.password);
 
         if (!isMatch) {
             return next(createError(400, 'Password incorrect'));
         }
-
 
         const payload = {
             user: {
@@ -79,48 +77,56 @@ authController.login = async (req, res, next) => {
 
     } catch (err) {
         console.log('Error from login:', err);
-        next(err); 
+        next(err);
     }
 };
 
-authController.forgetPassword = async(req, res, next) => {
+authController.forgetPassword = async (req, res, next) => {
     try {
-        const {email} = req.body;
-
+        const { email } = req.body;
         const user = await authServices.getEmail(email)
 
-        if(!user) {
-            return createError(400,'Username or Email does not exist')
+        if (!email) {
+            return createError(400, 'Email is require')
         }
-        
-        const resetToken = authServices.createResetPassword();
-        const hashedToken = authServices.hashToken(resetToken);
+        if (!user) {
+            return createError(400, 'Email does not exist')
+        }
 
-     
-        await authServices.saveResetToken(user.id, hashedToken);
+        const token = jwtServices.signResetToken({ userId: user.id });
+        const expiryDate = new Date(Date.now() + 3600000); // 1 ชั่วโมง
 
-        await authServices.sendResetEmail(user.email, resetToken);
+        await authServices.updateResetPassword(email,token, expiryDate)
 
-        res.json({ message: 'Reset password email sent successfully' });
-    }catch (err) {
-        console.log('error from forgetPassword',err)
+        await sendResetEmail(email, token, user.username);
+        res.json({ message: 'Password reset email sent.',token });
+    } catch (err) {
+        console.log('error from forgetPassword', err)
         next(err);
     }
 };
 
 authController.resetPassword = async (req, res, next) => {
+    const { token, newPassword } = req.body;
     try {
-        const { token, newPassword } = req.body;
-            
+        if(!token) {
+            return createError(400,'token is require')
+        }
+        if(!newPassword) {
+            return createError(400,'newPassword is require')
+        }
+        const decoded = jwtServices.verify(token);
+        console.log('Decoded token:', decoded); 
 
-        const userId = await authServices.verifyResetToken(token);
-        
-        if (!userId) {
-            return res.status(400).json({ message: 'Invalid or expired token' });
+        const user = await authServices.findUserById(decoded.userId)
+        console.log('User found:', user);
+
+        if (!user || user.resetPasswordToken !== token || new Date() > user.resetPasswordExpires) {
+            return createError(400,'Invalid or expired token')
         }
 
-        // อัปเดตรหัสผ่านใหม่
-        await authServices.updatePassword(userId, newPassword);
+        const hashedPassword = await hashServices.hash(newPassword);
+        await authServices.updatePassword(user.id, hashedPassword);
 
         res.json({ message: 'Password has been reset successfully' });
     } catch (err) {
@@ -132,7 +138,7 @@ authController.currentUser = async (req, res, next) => {
     try {
         const email = req.user.email;
         const member = await authServices.getCurrentUser(email);
-        
+
         if (!member) {
             return res.status(404).json({ message: "User not found" });
         }

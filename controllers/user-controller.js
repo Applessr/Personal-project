@@ -7,17 +7,18 @@ const userController = {};
 
 userController.getUserInfo = async(req,res,next) => {
     try {
-
         const userId = req.user.id;
+        if(!userId) {
+            return createError(400,'Check token expired date')
+        }
 
         const userInfo = await authServices.findUserById(userId);
-
         if (!userInfo) {
             return createError(404,'User not found') 
         }
 
         delete userInfo.password; 
-        res.json(userInfo);
+        res.status(200).json(userInfo);
 
     }catch (err) {
         console.log('Error from getUserInfo', err)
@@ -27,6 +28,9 @@ userController.getUserInfo = async(req,res,next) => {
 userController.updateUserInfo = async (req, res, next) => {
     try {
         const userId = req.user.id;
+        if(!userId) {
+            return createError(400,'Check token expired date')
+        }
         const {  username, email, currentPassword, newPassword, confirmPassword } = req.body;
         if (!userId) {
             return next(createError(400, 'User ID should be provided'));
@@ -55,18 +59,22 @@ userController.updateUserInfo = async (req, res, next) => {
             if (!isMatch) {
                 return next(createError(400, 'Current password is incorrect'));
             }
-
+            if (newPassword.length < 6) {
+                return next(createError(400, 'New password must be at least 6 characters long'));
+            }
             if (newPassword !== confirmPassword) {
                 return next(createError(400, 'New password and confirm password do not match'));
             }
 
             updatedData.password = await hashServices.hash(newPassword);
         }
+        if(Object.keys(updatedData).length === 0) {
+            return createError(400, 'At least one field must be updated')
+        }
         const updatedUser = await userServices.updateUser(userId, updatedData);
-        
         delete updatedUser.password;
 
-        res.json({ user: updatedUser });
+        res.status(200).json({ user: updatedUser });
     } catch (err) {
         console.error('Error from updateUserInfo', err);
         next(err);
@@ -75,9 +83,11 @@ userController.updateUserInfo = async (req, res, next) => {
 userController.deleteUser = async(req,res,next) => {
     try {
         const userId = req.user.id;
-
+        if(!userId) {
+            return createError(400,'Check token expired date')
+        }
         const user = await userServices.deleteUser(userId);
-        res.json({massage: `delete ${user.username} success`});
+        res.status(204).json({massage: `delete ${user.username} success`});
 
     }catch (err) {
         console.log('Error from deleteUser controller', err)

@@ -68,7 +68,7 @@ JWT_SECRET
 
 | Name | Endpoint | Method | Request Body | Response Body | Response Status Code | Remark  |
 |------|----------|--------|--------------|---------------|----------------------|---------|
-| admin get user list | /    | GET   | `{ senderId?, receiverId?, transactionType, amount, payeeName?, transactionDate?, description? }`             | `{ id, senderId?, receiverId?, transactionType, amount, payeeName?, transactionDate?, description? }`                  | 201                  | Authenticate token              |
+| admin get user list | /    | GET   | - | `userList: [{id: "",}]`                  | 201                  | Authenticate token              |
 | Get all transactions by account id | /               | GET    | -                                                                                                            | `[ {id, senderId?, receiverId?, transactionType, amount, payeeName?, transactionDate?, description? } ]`               | 200                  | ให้ดึงข้อมูล transaction ทั้งหมดตามแต่ละ account |
 | Edit transaction               | /:transactionId | PUT    | `{ senderId, receiverId, amount, description, payerName, transactionType, transactionDate }`                 | `{ id, senderId?, receiverId?, transactionType, amount, payeeName? }`                                                  | 200                  | ให้อัปเดตตัวใดตัวหนึ่งหรือทั้งหมดก็ได้          |
 | Delete transaction             | /:transactionId | DELETE | -                                                                                                            | -                                                                                                                     | 204                  |                                 |

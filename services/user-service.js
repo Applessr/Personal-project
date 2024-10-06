@@ -29,8 +29,23 @@ userServices.getAllProgress = async (userId) => {
         },
     });
 };
-
-
+userServices.getAllUserScore = async (lessonId) => {
+    return await prisma.userProgress.findMany({
+        where: {
+            lessonId: Number(lessonId) 
+        },
+        include: {
+            user: { 
+                select: {
+                    username: true, 
+                }
+            }
+        },
+        orderBy: {
+            score: 'desc',
+        },
+    });
+};
 userServices.getProgressByLesson = async (userId, lessonId) => {
     return await prisma.userProgress.findUnique({
         where: {
@@ -45,24 +60,39 @@ userServices.getProgressByLesson = async (userId, lessonId) => {
     });
 };
 
-
-userServices.updateProgress = async (userId, lessonId, progressData) => {
-    return await prisma.userProgress.update({
+userServices.updateProgress = async (userId, lessonId, score) => {
+    const currentProgress = await prisma.userProgress.findUnique({
         where: {
             userId_lessonId: { 
                 userId: Number(userId),
                 lessonId: Number(lessonId)
             }
+        }
+    });
+
+    if (!currentProgress) {
+        throw new Error('Progress not found'); 
+    }
+
+    return await prisma.userProgress.update({
+        where: {
+            userId_lessonId: { 
+                userId: Number(userId), 
+                lessonId: Number(lessonId) 
+            }
         },
-        data: progressData
+        data: {
+            score: score.score, 
+            attempts: currentProgress.attempts + 1, 
+        }
     });
 };
 
 userServices.createProgress = async (userId, lessonId, score) => {
     return await prisma.userProgress.create({
         data: {
-            userId,
-            lessonId,
+            userId: Number(userId),
+            lessonId: Number(lessonId),
             score,
             attempts: 1, 
         },

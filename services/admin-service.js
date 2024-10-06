@@ -78,11 +78,25 @@ adminServices.addVocabulary = async (newVocabulary) => {
         throw error;
     }
 };
-adminServices.deleteVocabList = async (id) => {
+adminServices.updateVocab = async (vocabularyId,updateData) => {
+    return await prisma.vocabulary.update({
+        where: {
+            id: Number(vocabularyId), 
+        },
+        data: {
+            wordTh: updateData.wordTh,
+            wordEs: updateData.wordEs,
+            image: updateData.image,
+            categoryId: updateData.categoryId,
+        },
+    });
+};
+
+adminServices.deleteVocabList = async (vocabularyId) => {
     try {
         const vocabList = await prisma.vocabulary.delete({
             where: {
-                id: Number(id),
+                id: Number(vocabularyId),
             },
         });
         return vocabList;

@@ -4,6 +4,7 @@ const lessonController = require('../controllers/lesson-controller');
 const vocabularyController = require('../controllers/vocabulary-controller');
 const searchController = require('../controllers/search-controller');
 const authenticate = require('../middlewares/authentication');
+const favoriteController = require('../controllers/favorite-controller');
 
 
 const router = express.Router()
@@ -27,9 +28,9 @@ router.post('/user-history', searchController.createSearch);
 router.delete('/user-history/:historyId',searchController.deleteSearch);
 
 // Favorite vocab
-router.get('/user-favorite',(req,res)=> {res.json({message: 'hi get vocab'})});
-router.post('/user-favorite',(req,res)=> {res.json({message: 'hi get vocab'})});
-router.delete('/user-favorite/:favoriteId',(req,res)=> {res.json({message: 'hi delete vocab'})});
+router.get('/user-favorite', favoriteController.getUserFavorite);
+router.post('/user-favorite/:vocabularyId',favoriteController.addUserFavorite);
+router.delete('/user-favorite/:favoriteId',favoriteController.deleteUserFavorite);
 
 
 module.exports = router;
