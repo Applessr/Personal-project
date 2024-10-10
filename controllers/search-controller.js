@@ -21,25 +21,33 @@ searchController.getSearch = async(req,res,next) => {
         next(err)
     }
 }
-searchController.createSearch = async(req,res,next) => {
+searchController.createSearch = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        if(!userId) {
-            return createError(400,'user ID is require')
+        if (!userId) {
+            return createError(400, 'user ID is required');
         }
 
-        const {searchTerm} = req.body;
-        if(!searchTerm) {
-            return createError(400, 'searchTerm is require')
+        const { searchTerm } = req.body;
+        if (!searchTerm) {
+            return createError(400, 'searchTerm is required');
         }
 
-        const createSearch = await searchServices.createSearch(userId,searchTerm)
+        const searchHistory = await searchServices.getSearchHistory(userId);
+        if (searchHistory.length >= 20) {
+            const oldestSearch = searchHistory.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))[0];
+            if (oldestSearch) {
+                await searchServices.deleteSearch(oldestSearch.id); 
+            }
+        }
+
+        const createSearch = await searchServices.createSearch(userId, searchTerm);
         res.status(201).json(createSearch);
     } catch (err) {
-        console.log('error form createSearch',err)
-        next(err)
+        console.log('error from createSearch', err);
+        next(err);
     }
-}
+};
 searchController.deleteSearch = async(req,res,next) => {
     try {
         const userId = req.user.id;

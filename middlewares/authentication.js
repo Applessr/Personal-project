@@ -5,21 +5,21 @@ const createError = require("../utils/createError");
 const authenticate = async (req, res, next) => {
     try {
         const authorization = req.headers.authorization;
-
         if (!authorization || !authorization.startsWith('Bearer ')) {
             return createError(401, 'Unauthorized');
         }
 
         const token = authorization.split(" ")[1];
-
         if (!token) {
             return createError(401, 'Unauthorized');
         }
 
         const jwtPayload = jwtServices.verify(token);
+        if (!jwtPayload || !jwtPayload.id) {
+            return createError(401, 'Unauthorized: Invalid token');
+        }
         
         const user = await authServices.findUserById(jwtPayload.id);
-        
         if (!user) {
             return createError(401, 'Unauthorized');
         }

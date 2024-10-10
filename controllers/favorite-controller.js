@@ -8,7 +8,7 @@ favoriteController.getUserFavorite = async(req,res,next) => {
         const userId = req.user.id
         if(!userId) {
             return createError(400,'user ID is require')
-        } 
+        }
 
         const favorite = await favoriteService.getUserFavorite(userId);
         if(!favorite ||favorite.length === 0) {
@@ -23,11 +23,11 @@ favoriteController.getUserFavorite = async(req,res,next) => {
 favoriteController.addUserFavorite = async(req, res, next) => {
     try {
         const userId = req.user.id;
+        const { vocabularyId } = req.params;
         if(!userId) {
             return createError(400,'user ID is require')
         } 
 
-        const { vocabularyId } = req.params;
         if(!vocabularyId) {
             return createError(400,'vocabulary ID is require')
         } 
@@ -44,24 +44,29 @@ favoriteController.addUserFavorite = async(req, res, next) => {
         next(err);
     }
 };
-favoriteController.deleteUserFavorite = async(req,res,next) => {
-  try {
-    const userId = req.user.id;
-    if(!userId) {
-        return createError(400,'user ID is require')
-    } 
-    const {favoriteId} = req.params;
-    if (!favoriteId) {
-        return res.status(400).json({ message: 'Favorite ID is required' });
+favoriteController.deleteUserFavorite = async (req, res, next) => {
+    try {
+        const userId = req.user.id; 
+        const { vocabularyId } = req.params; 
+        console.log(req.params)
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        if (!vocabularyId) {
+            return res.status(400).json({ message: 'Vocabulary ID is required' });
+        }
+
+        const isFavorite = await favoriteService.findUniqueVocab(userId, vocabularyId);
+        if (!isFavorite) {
+            return res.status(404).json({ message: 'Favorite not found for this user and vocabulary' });
+        }
+
+        await favoriteService.deleteUserFavorite(userId, vocabularyId);
+        return res.status(200).json({ message: 'Favorite deleted successfully' });
+    } catch (err) {
+        console.log('Error in deleteUserFavorite:', err);
+        next(err);
     }
-
-    const favorite = await favoriteService.deleteUserFavorite(userId,favoriteId)
-    res.status(204).json({message: 'already delete vocabulary in your favorite'})
-  } catch(err) {
-    console.log('error in deleteUserFavorite',err)
-    next(err)
-  }
-}
-
-
+};
 module.exports = favoriteController;

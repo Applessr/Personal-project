@@ -26,9 +26,23 @@ userProgressController.getAllUserScore = async (req, res, next) => {
             return createError(400,'lesson ID is require')
         } 
         const scores = await userServices.getAllUserScore(lessonId); 
-        if(!scores || scores.length === 0 ) {
-            return createError(404,'no scores found')
-        }
+        res.status(200).json(scores);
+    } catch (err) {
+        console.log('error in getAllUserScore', err);
+        next(err);
+    }
+};
+userProgressController.getScoreLesson = async (req, res, next) => {
+    try {
+        const userId = req.user.id
+        if(!userId) {
+            return createError(400,'user ID is require')
+        } 
+        const {lessonId} = req.params; 
+        if(!lessonId) {
+            return createError(400,'lesson ID is require')
+        } 
+        const scores = await userServices.getScoreOne(userId,lessonId); 
         res.status(200).json(scores);
     } catch (err) {
         console.log('error in getAllUserScore', err);

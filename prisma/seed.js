@@ -3,23 +3,22 @@ const prisma = require('../config/prisma')
 
 
 const categoryData = [
-    { name: 'วันในสัปดาห์', image: 'https://i.imgur.com/Ez22XSu.png' },
-    { name: 'เดือน', image: 'https://i.imgur.com/H28h8Wl.png' },
-    { name: 'สัตว์น้ำ', image: 'https://i.imgur.com/ZMo9URB.png' },
-    { name: 'แมลง และแมง', image: 'https://i.imgur.com/wddUIgn.png' },
-    { name: 'สัตว์', image: 'https://i.imgur.com/Ez22XSu.png' },
-    { name: 'สี', image: 'https://i.imgur.com/S4zowPk.png' },
-    { name: 'รูปทรง', image: 'https://i.imgur.com/Kt2CV4M.png' },
-    { name: 'ตัวเลข', image: 'https://i.imgur.com/iVyAAX5.png' },
-    { name: 'การบอกเวลา', image: 'https://i.imgur.com/LhlWwOq.png' },
-    { name: 'ผลไม้', image: 'https://i.imgur.com/PkldsGu.png' },
-    { name: 'อาหาร', image: 'https://i.imgur.com/0CjxKaf.png' },
-    { name: 'เครื่องดื่ม', image: 'https://i.imgur.com/OIMTaex.png' },
-    { name: 'ประโยคในชีวิตประจำวัน', image: 'https://i.imgur.com/P1SwSfx.png' },
-    { name: 'อารมณ์', image: 'https://i.imgur.com/jXP4qGo.png' },
-    { name: 'ประโยคคำถาม', image: 'https://i.imgur.com/m9Z8ezd.png' },
-    { name: 'ครอบครัว', image: 'https://i.imgur.com/SZkSbmO.png' },
-
+    { name: 'วันในสัปดาห์', nameES: 'Días de la semana', image: 'https://i.imgur.com/Ez22XSu.png' },
+    { name: 'เดือน', nameES: 'Los Meses', image: 'https://i.imgur.com/H28h8Wl.png' },
+    { name: 'สัตว์น้ำ', nameES: 'Animales acuáticos', image: 'https://i.imgur.com/ZMo9URB.png' },
+    { name: 'แมลง และแมง', nameES: 'Insectos y arácnidos', image: 'https://i.imgur.com/wddUIgn.png' },
+    { name: 'สัตว์', nameES: 'Animales', image: 'https://i.imgur.com/Ez22XSu.png' },
+    { name: 'สี', nameES: 'Colores', image: 'https://i.imgur.com/S4zowPk.png' },
+    { name: 'รูปทรง', nameES: 'Formas', image: 'https://i.imgur.com/Kt2CV4M.png' },
+    { name: 'ตัวเลข', nameES: 'Números', image: 'https://i.imgur.com/iVyAAX5.png' },
+    { name: 'การบอกเวลา', nameES: 'Cómo decir la hora', image: 'https://i.imgur.com/LhlWwOq.png' },
+    { name: 'ผลไม้', nameES: 'Frutas', image: 'https://i.imgur.com/PkldsGu.png' },
+    { name: 'อาหาร', nameES: 'Comidas', image: 'https://i.imgur.com/0CjxKaf.png' },
+    { name: 'เครื่องดื่ม', nameES: 'Bebidas', image: 'https://i.imgur.com/OIMTaex.png' },
+    { name: 'ประโยคในชีวิตประจำวัน', nameES: 'Frases diarias', image: 'https://i.imgur.com/P1SwSfx.png' },
+    { name: 'อารมณ์', nameES: 'Emociones', image: 'https://i.imgur.com/jXP4qGo.png' },
+    { name: 'ประโยคคำถาม', nameES: 'Frases con preguntas.', image: 'https://i.imgur.com/m9Z8ezd.png' },
+    { name: 'ครอบครัว', nameES: 'Familia', image: 'https://i.imgur.com/SZkSbmO.png' },
 ];
 
 const lessonData = [
@@ -48,7 +47,7 @@ const questionData = [
 
     { question: '¿Cuál es la capital de Tailandia?', image: 'https://www.svgrepo.com/show/159393/thailand.svg', option1: 'Chiang Mai', option2: 'Bangkok', correctOption: 'option2', lessonId: 2 },
     { question: 'el hotel แปลว่า', image: 'https://www.svgrepo.com/show/530618/hotel.svg', option1: 'โรงแรม', option2: 'โรงพยาบาล', correctOption: 'option1', lessonId: 2 },
-    { question: 'El aeropuerto แปลว่า', image: 'https://www.svgrepo.com/svg/500079/airport', option1: 'สนามบิน', option2: 'สถานีรถไฟ', correctOption: 'option1', lessonId: 2 },
+    { question: 'El aeropuerto แปลว่า', image: 'https://www.svgrepo.com/show/500079/airport.svg', option1: 'สนามบิน', option2: 'สถานีรถไฟ', correctOption: 'option1', lessonId: 2 },
     { question: 'El pasaporte แปลว่า', image: 'https://www.svgrepo.com/show/394332/passport-alt.svg', option1: 'บัตรประจำตัวประชาชน', option2: 'หนังสือเดินทาง', correctOption: 'option2', lessonId: 2 },
     { question: 'เที่ยวให้สนุก ในภาษาสเปนพูดว่าอย่างไร?', image: 'https://www.svgrepo.com/show/490731/flight-ticket.svg', option1: '¡Que te diviertas!', option2: '¡Buenas noches!', correctOption: 'option1', lessonId: 2 },
     { question: 'เดินทางปลอดภัย ในภาษาสเปนพูดว่าอย่างไร?', image: 'https://www.svgrepo.com/show/401832/four-leaf-clover.svg', option1: '¡Buen viaje!', option2: '¡Buenos días!', correctOption: 'option1', lessonId: 2 },
@@ -118,7 +117,17 @@ const vocabularyData = [
     { wordTh: "วันเสาร์", wordEs: "El Sábado", image: "https://media.istockphoto.com/id/157315728/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%9B%E0%B8%B0%E0%B8%95%E0%B8%B4%E0%B8%94%E0%B8%9B%E0%B8%B0%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B8%8A%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%94%E0%B8%B2%E0%B8%A9%E0%B8%84%E0%B8%B1%E0%B8%97%E0%B9%80%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B9%8D%E0%B8%B2%E0%B8%A7%E0%B9%88%E0%B8%B2-saturday.jpg?s=612x612&w=0&k=20&c=yJeJpyFTVMEIctZi_vSEx77_f2yc05Xjt6pOhlGHL3w=", categoryId: 1 },
     { wordTh: "เดือน", wordEs: "El mes", image: "https://media.istockphoto.com/id/157335060/photo/the-months-and-days-of-the-year-on-calendar-paper.webp?a=1&b=1&s=612x612&w=0&k=20&c=SroP3MvR1G3iR6HLnfbNg86kVJeFWKcVoNh5znejDR8=", categoryId: 2 },
     { wordTh: "มกราคม", wordEs: "enero", image: "https://media.istockphoto.com/id/1757255528/photo/2024-january-calendar-on-blue-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=gbPuzxLrXVEdSB3xf9NVTnUpqI4Ws3Ve9WgNaFcpXo4=", categoryId: 2 },
-    { wordTh: "กุมภาพันธ์", wordEs: "febrero", image: "https://media.istockphoto.com/id/1833421150/photo/desktop-calendar-year-2024-month-of-february.webp?a=1&b=1&s=612x612&w=0&k=20&c=uHWdnLr9RwiqMXoayPhBWgYZCztKCE9s6FDeBeZ9lzM=", categoryId: 2 },
+    { wordTh: "กุมภาพันธ์", "wordEs": "febrero", "image": "https://media.istockphoto.com/id/1833421150/photo/desktop-calendar-year-2024-month-of-february.webp?a=1&b=1&s=612x612&w=0&k=20&c=uHWdnLr9RwiqMXoayPhBWgYZCztKCE9s6FDeBeZ9lzM=", categoryId: 2 },
+    { wordTh: "มีนาคม", wordEs: "marzo", image: "https://images.unsplash.com/photo-1582647790126-0fd37ff34f98?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFyY2glMjBtb250aHxlbnwwfHwwfHx8MA%3D%3D", categoryId: 2 },
+    { wordTh: "เมษายน", wordEs: "abril", image: "https://media.istockphoto.com/id/1672349008/photo/white-sticky-note-with-2024-april-calendar-and-red-push-pin-on-yellow-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=72XDJlW_wZuln5CBgiRK2eHMh5CH8lcNdwiTeouQjKk=",categoryId: 2 },
+    { wordTh: "พฤษภาคม", wordEs: "mayo", image: "https://images.unsplash.com/photo-1588006175084-89a8451561bf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1heSUyMG1vbnRofGVufDB8fDB8fHww", categoryId: 2 },
+    { wordTh: "มิถุนายน", wordEs: "junio", image: "https://images.unsplash.com/photo-1589726310756-0198bd0d0fb2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8anVuZSUyMG1vbnRofGVufDB8fDB8fHww", categoryId: 2 },
+    { wordTh: "กรกฎาคม", wordEs: "julio", image: "https://images.unsplash.com/photo-1593448844447-f5c63fe0d806?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8anVseSUyMG1vbnRofGVufDB8fDB8fHww", categoryId: 2 },
+    { wordTh: "สิงหาคม", wordEs: "agosto", image: "https://media.istockphoto.com/id/171221587/photo/august-handwritten-in-the-sandy-shoreline.webp?a=1&b=1&s=612x612&w=0&k=20&c=6KLjq4Dz6tU5ncnBe_XyCVtiD-znQ9213qriK9TchgM=", categoryId: 2 },
+    { wordTh: "กันยายน", wordEs: "septiembre", image: "https://media.istockphoto.com/id/1728573889/photo/white-sticky-note-with-2024-september-calendar-and-red-push-pin-on-blue-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=6Fc9Zz-taJHKwIwhNX-V5tnmzCkmKoJtY0X6Uk000CE=", categoryId: 2 },
+    { wordTh: "ตุลาคม", wordEs: "octubre", image: "https://media.istockphoto.com/id/1672350648/photo/white-sticky-note-with-2024-october-calendar-and-red-push-pin-on-yellow-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=8wcdyvI9DuxlypAB3Rrtj864TBnhi8GjOhk1OUa4JYI=", categoryId: 2 },
+    { wordTh: "พฤศจิกายน", wordEs: "noviembre", image: "https://images.unsplash.com/photo-1604440976974-c8e2c6ee69c6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bm92ZW1iZXJ8ZW58MHx8MHx8fDA%3D", categoryId: 2 },
+    { wordTh: "ธันวาคม", wordEs: "diciembre", image: "https://images.unsplash.com/photo-1604440976150-c12352c982ce?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fG1heSUyMG1vbnRofGVufDB8fDB8fHww", categoryId: 2 }
 ];
 
 console.log('DB seed...')

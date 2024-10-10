@@ -15,6 +15,18 @@ vocabularyController.getVocabCategory = async(req,res,next) => {
         next(err)
     }
 }
+vocabularyController.getAllVocab = async(req,res,next) => {
+    try {
+        const getAllVocab = await vocabServices.getAllVocab();
+        if(!getAllVocab || getAllVocab.length === 0) {
+            return createError(404, 'No Vocabulary found in the database')
+        }
+        res.status(200).json(getAllVocab);
+    }catch(err) {
+        console.log('error form getAllVocab',err)
+        next(err)
+    }
+}
 vocabularyController.getVocabCategoryId = async(req,res,next) => {
    
     try {
@@ -26,7 +38,7 @@ vocabularyController.getVocabCategoryId = async(req,res,next) => {
         if (!getVocabByCategoryId) {
             return createError(404, 'vocabulary not found')
         }
-        res.status.json(getVocabByCategoryId);
+        res.status(200).json(getVocabByCategoryId);
     }catch(err) {
         console.log('error form getVocabCategoryId',err)
         next(err)

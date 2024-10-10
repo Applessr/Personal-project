@@ -22,7 +22,7 @@ authController.register = async (req, res, next) => {
         const result = await authServices.createUser({ username, email, password: hashPassword })
 
         console.log(result)
-        res.json({ username, email })
+        res.status(201).json({ username, email })
     } catch (err) {
         console.log('Error from register', err)
         next(err);
@@ -69,7 +69,7 @@ authController.login = async (req, res, next) => {
 
         const accessToken = jwtServices.sign({ id: user.id });
 
-        res.json({
+        res.status(200).json({
             message: 'Login successful',
             user: payload,
             token: accessToken,
@@ -99,7 +99,7 @@ authController.forgetPassword = async (req, res, next) => {
         await authServices.updateResetPassword(email,token, expiryDate)
 
         await sendResetEmail(email, token, user.username);
-        res.json({ message: 'Password reset email sent.',token });
+        res.status(200).json({ message: 'Password reset email sent.' });
     } catch (err) {
         console.log('error from forgetPassword', err)
         next(err);
@@ -128,7 +128,7 @@ authController.resetPassword = async (req, res, next) => {
         const hashedPassword = await hashServices.hash(newPassword);
         await authServices.updatePassword(user.id, hashedPassword);
 
-        res.json({ message: 'Password has been reset successfully' });
+        res.status(200).json({ message: 'Password has been reset successfully' });
     } catch (err) {
         console.log('error from resetPassword', err);
         next(err);
@@ -144,7 +144,7 @@ authController.currentUser = async (req, res, next) => {
         }
 
         console.log(member);
-        res.json({ member });
+        res.status(200).json({ member });
     } catch (err) {
         next(err);
     }

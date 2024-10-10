@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.get('/', userProgressController.getAllProgress);
 router.get('/:lessonId', userProgressController.getAllUserScore);
+router.get('/personal/:lessonId', userProgressController.getScoreLesson);
 router.patch('/:lessonId', userProgressController.updateProgress);
 router.post('/:lessonId', userProgressController.createProgress);
 

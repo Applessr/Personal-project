@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const createError = require("../utils/createError");
 const jwtServices = {};
 
 jwtServices.sign = (payload) => {

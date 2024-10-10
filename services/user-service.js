@@ -29,6 +29,17 @@ userServices.getAllProgress = async (userId) => {
         },
     });
 };
+userServices.getScoreOne = async (userId, lessonId) => {
+    return await prisma.userProgress.findMany({
+        where: { 
+            userId,
+            lessonId: Number(lessonId) ,
+         },
+         orderBy: {
+            score: 'desc'
+         }
+    });
+};
 userServices.getAllUserScore = async (lessonId) => {
     return await prisma.userProgress.findMany({
         where: {

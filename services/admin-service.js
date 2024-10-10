@@ -10,7 +10,7 @@ adminServices.getAllUser = async () => {
                 username: true,
                 email: true,
                 role: true,
-                updatedAt: true,
+                createdAt: true,
             },
         });
         return users;
@@ -35,21 +35,25 @@ adminServices.updateUserRole = async (userId, role) => {
         throw error;
     }
 };
-adminServices.getVocabList = async () => {
+adminServices.getVocabList = async (categoryId) => {
     try {
-        const vocabList = await prisma.vocabulary.findMany({});
+        const vocabList = await prisma.vocabulary.findMany({
+            where : {
+                categoryId: Number(categoryId)
+            }
+        });
         return vocabList;  
     } catch (error) {
         console.error("Error getVocabList:", error);
         throw error;  
     }
 };
-adminServices.addVocabulary = async (newVocabulary) => {
+adminServices.addVocabulary = async (newVocabulary,categoryId) => {
     try {
         const existingVocabulary = await prisma.vocabulary.findFirst({
             where: {
                 wordTh: newVocabulary.wordTh,
-                categoryId: newVocabulary.categoryId,
+                categoryId: Number(categoryId),
             },
         });
 
@@ -65,10 +69,9 @@ adminServices.addVocabulary = async (newVocabulary) => {
                 wordTh: newVocabulary.wordTh,
                 wordEs: newVocabulary.wordEs,
                 image: newVocabulary.image,
-                categoryId: newVocabulary.categoryId,
+                categoryId:  Number(categoryId),
             },
         });
-
         return {
             success: true,
             createdVocabulary,

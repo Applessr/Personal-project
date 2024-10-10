@@ -8,9 +8,9 @@ adminController.getUserList = async (req, res, next) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'ADMIN') {
-            return res.status(403).json({ message: "You don't have permission to access user information" });
+            return createError(403,"You don't have permission to update user role");
         }
-
+       
         const userList = await adminServices.getAllUser();
         res.status(200).json({ userList });
     } catch (err) {
@@ -22,7 +22,7 @@ adminController.updateUserRole = async (req, res, next) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'ADMIN') {
-            return res.status(403).json({ message: "You don't have permission to update user role" });
+            return createError(403,"You don't have permission to update user role");
         }
         const { userId } = req.params
         const { role } = req.body
@@ -37,9 +37,13 @@ adminController.getVocabList = async (req, res, next) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'ADMIN') {
-            return res.status(403).json({ message: "You don't have permission to access vocabulary information" });
+            return createError(403,"You don't have permission to update user role");
         }
-        const vocabList = await adminServices.getVocabList();
+        const {categoryId} = req.params
+        if(!categoryId) {
+            return createError(400, 'CategoryId is require')
+        }
+        const vocabList = await adminServices.getVocabList(categoryId);
         res.json({ vocabList });
     } catch (err) {
         console.log('error from getVocabList', err)
@@ -50,11 +54,15 @@ adminController.addVocabulary = async (req, res, next) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'ADMIN') {
-            return res.status(403).json({ message: "You don't have permission to add vocabulary" });
+            return createError(403,"You don't have permission to update user role");
+        }
+        const {categoryId} = req.params
+        if(!categoryId) {
+            return createError(400, 'CategoryId is require')
         }
         const newVocabulary = req.body;
-        const createdVocabulary = await adminServices.addVocabulary(newVocabulary);
-        res.json({ createdVocabulary });
+        const createdVocabulary = await adminServices.addVocabulary(newVocabulary,categoryId);
+        res.json( createdVocabulary );
     } catch (err) {
         console.log('error from addVocabulary', err)
         next(err)
@@ -64,10 +72,10 @@ adminController.updateVocabulary = async (req, res, next) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'ADMIN') {
-            return res.status(403).json({ message: "You don't have permission to update vocabulary data" });
+            return createError(403,"You don't have permission to update user role");
         }
         const {vocabularyId} = req.params
-        const { wordTh, wordEs, image, categoryId } = req.body;
+        const { wordTh, wordEs, image } = req.body;
 
         const updatedData = {};
 
@@ -79,9 +87,6 @@ adminController.updateVocabulary = async (req, res, next) => {
         }
         if (image) {
             updatedData.image = image;
-        }
-        if (categoryId) {
-            updatedData.categoryId = categoryId;
         }
         if (!updatedData) {
             return createError(400, 'updatedData is require')

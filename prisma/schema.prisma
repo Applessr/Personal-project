@@ -89,7 +89,8 @@ model Vocabulary {
 
 model Category {
   id         Int          @id @default(autoincrement())
-  name       String       @unique
+  name       String
+  nameES     String       @map("name_es")
   image      String       @db.Text
   vocabulary Vocabulary[]
 }
@@ -102,5 +103,5 @@ model Favorite {
   vocabulary   Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
   vocabularyId Int
 
-  @@unique([userId, vocabularyId]) 
+  @@unique([userId, vocabularyId])
 }

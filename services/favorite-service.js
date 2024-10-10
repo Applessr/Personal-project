@@ -4,17 +4,19 @@ const prisma = require("../config/prisma");
 const favoriteService = {};
 
 favoriteService.findUniqueVocab = async (userId, vocabularyId) => {
-    return await prisma.favorite.findFirst({
+    return await prisma.favorite.findUnique({
       where: {
-        userId: userId,
-        vocabularyId: Number(vocabularyId) 
+        userId_vocabularyId: {
+          userId: userId, 
+          vocabularyId: Number(vocabularyId) 
+        }
       }
     });
   };
 favoriteService.getUserFavorite = async (userId) => {
     return await prisma.favorite.findMany({
         where: {
-            userId: Number(userId), 
+            userId: Number(userId),
         },
         include: {
             vocabulary: {
@@ -27,14 +29,15 @@ favoriteService.getUserFavorite = async (userId) => {
         },
     });
 };
-favoriteService.addUserFavorite = async (userId,vocabularyId) => {
+favoriteService.addUserFavorite = async (userId, vocabularyId) => {
     return await prisma.favorite.create({
         data: {
-            userId: Number(userId), 
-            vocabularyId: Number(vocabularyId), 
+            userId: Number(userId),
+            vocabularyId: Number(vocabularyId),
         },
     });
 };
+
 favoriteService.deleteUserFavorite = async (userId, vocabularyId) => {
     return await prisma.favorite.delete({
         where: {
@@ -45,5 +48,4 @@ favoriteService.deleteUserFavorite = async (userId, vocabularyId) => {
         }
     });
 };
-
 module.exports = favoriteService;

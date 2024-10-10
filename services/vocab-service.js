@@ -7,6 +7,9 @@ const vocabServices = {};
 vocabServices.getVocabCategory = async() => {
     return await prisma.category.findMany({});
 };
+vocabServices.getAllVocab = async() => {
+    return await prisma.vocabulary.findMany({});
+};
 vocabServices.getVocabCategoryId = async(id) => {
     const vocabCategoryId = await prisma.category.findUnique({
         where: {id:Number(id)},

@@ -9,28 +9,29 @@ const favoriteController = require('../controllers/favorite-controller');
 
 const router = express.Router()
 
-router.get('/',userController.getUserInfo);
-router.patch('/',userController.updateUserInfo);
-router.delete('/',userController.deleteUser);
+router.get('/', authenticate,userController.getUserInfo);
+router.patch('/',authenticate,userController.updateUserInfo);
+router.delete('/',authenticate,userController.deleteUser);
 
 
 // Lesson
-router.get('/lessons', lessonController.getAllLessons); 
-router.get('/lessons/:lessonsId', lessonController.getLessonById);
+router.get('/lessons', authenticate, lessonController.getAllLessons); 
+router.get('/lessons/:lessonsId', authenticate, lessonController.getLessonById);
 
 // Vocabulary
-router.get('/vocabulary', vocabularyController.getVocabCategory); 
-router.get('/vocabulary/:vocabularyId', vocabularyController.getVocabCategoryId);
+router.get('/vocabulary',authenticate, vocabularyController.getVocabCategory); 
+router.get('/allVocabulary', vocabularyController.getAllVocab); 
+router.get('/vocabulary/:vocabularyId', authenticate, vocabularyController.getVocabCategoryId);
 
 // Search history
-router.get('/user-history', searchController.getSearch);
-router.post('/user-history', searchController.createSearch);
-router.delete('/user-history/:historyId',searchController.deleteSearch);
+router.get('/user-history', authenticate, searchController.getSearch);
+router.post('/user-history', authenticate, searchController.createSearch);
+router.delete('/user-history/:historyId', authenticate,searchController.deleteSearch);
 
 // Favorite vocab
-router.get('/user-favorite', favoriteController.getUserFavorite);
-router.post('/user-favorite/:vocabularyId',favoriteController.addUserFavorite);
-router.delete('/user-favorite/:favoriteId',favoriteController.deleteUserFavorite);
+router.get('/user-favorite', authenticate, favoriteController.getUserFavorite);
+router.post('/user-favorite/:vocabularyId', authenticate,favoriteController.addUserFavorite);
+router.delete('/user-favorite/:vocabularyId', authenticate,favoriteController.deleteUserFavorite);
 
 
 module.exports = router;

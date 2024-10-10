@@ -16,7 +16,7 @@ app.use(express.json()); //middlewere
 
 app.use('/auth', authRouter)
 
-app.use('/user',authenticate,userRouter)
+app.use('/user',userRouter)
 app.use('/user/user-progress',authenticate,userProgressRouter)
 
 app.use('/admin',authenticate,adminRouter)
