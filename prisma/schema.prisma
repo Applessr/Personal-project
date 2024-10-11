@@ -15,9 +15,10 @@ datasource db {
 
 model User {
   id                   Int             @id @default(autoincrement())
+  googleId            String?         @unique 
   username             String          @unique @map("user_name")
   email                String          @unique
-  password             String
+  password             String?
   role                 Role            @default(USER)
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")

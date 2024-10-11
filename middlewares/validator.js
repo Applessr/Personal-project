@@ -10,7 +10,7 @@ const registerSchema = Joi.object({
         "string.empty" : "Email is require"
     }),
     username: Joi.string()
-    .pattern(/^[0-9a-zA-Z]{3,}$/)
+    .pattern(/^[0-9a-zA-Z]{3,40}$/)
     .required()
     .messages({
         "string.empty" : "Username is require",
@@ -18,7 +18,7 @@ const registerSchema = Joi.object({
     }),
     password: Joi.string()
     .required()
-    .pattern(/^[0-9a-zA-Z]{6,}$/)
+    .pattern(/^[0-9a-zA-Z]{6,40}$/)
     .messages({ 
         "string.empty" : "Password is require",
         "string.pattern.base" : "Password must contain a-z A-Z 0-9 and must be at least 6 characters."

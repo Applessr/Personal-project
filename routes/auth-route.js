@@ -9,6 +9,8 @@ router.post('/register',registerValidator,authController.register);
 
 router.post('/login',loginValidator,authController.login);
 
+router.post('/login/google',authController.loginGoogle);
+
 router.post('/forget-password',authController.forgetPassword);
 
 router.post('/reset-password',authController.resetPassword);

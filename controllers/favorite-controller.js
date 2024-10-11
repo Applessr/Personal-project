@@ -11,7 +11,7 @@ favoriteController.getUserFavorite = async(req,res,next) => {
         }
 
         const favorite = await favoriteService.getUserFavorite(userId);
-        if(!favorite ||favorite.length === 0) {
+        if(!favorite ) {
             return createError(404,'no favorite vocabulary found')
         }
         res.status(200).json(favorite)

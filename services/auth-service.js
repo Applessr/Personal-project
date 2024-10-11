@@ -25,9 +25,34 @@ authServices.findUserById = async(id) => {
         },
     });
 };
+authServices.findUserByGoogleId= async(googleId) => {
+    return await prisma.user.findUnique({
+        where: {
+            googleId: googleId,
+        },
+    });
+};
 authServices.createUser = async(data) => {
     return await prisma.user.create({
         data,
+    });
+};
+authServices.createGoogleUser = async (data) => {
+    return await prisma.user.create({
+        data: {
+            googleId: data.googleId, 
+            email: data.email,
+            username: data.username,
+            password: '', 
+        },
+    });
+};
+authServices.updateUser = async (id, data) => {
+    return await prisma.user.update({
+        where: {
+            id: id,
+        },
+        data: data,
     });
 };
 authServices.getCurrentUser = async(email) => {
