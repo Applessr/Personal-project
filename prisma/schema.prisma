@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id                   Int             @id @default(autoincrement())
-  googleId            String?         @unique 
+  googleId             String?         @unique
   username             String          @unique @map("user_name")
   email                String          @unique
   password             String?
@@ -27,6 +27,7 @@ model User {
   userProgress         UserProgress[]
   searchHistory        SearchHistory[]
   favorites            Favorite[]
+  Subscription         Subscription?
 }
 
 enum Role {
@@ -105,4 +106,29 @@ model Favorite {
   vocabularyId Int
 
   @@unique([userId, vocabularyId])
+}
+
+model Subscription {
+  id        Int                @id @default(autoincrement())
+  startDate DateTime           @map("start_date")
+  endDate   DateTime           @map("end_date")
+  status    SubscriptionStatus
+  plan      Plan
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @default(now()) @updatedAt @map("updated_at")
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int                @unique @map("user_id")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PENDING
+  CANCELED
+  EXPIRED
+}
+
+enum Plan {
+  ONE_MONTH
+  SIX_MONTH
+  TWELVE_MONTH
 }
