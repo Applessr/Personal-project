@@ -36,6 +36,8 @@ userController.updateUserInfo = async (req, res, next) => {
             return next(createError(400, 'User ID should be provided'));
         }
 
+        console.log( currentPassword, newPassword, confirmPassword,' currentPassword, newPassword, confirmPassword')
+        
         if (typeof userId !== 'number' || isNaN(userId)) {
             return next(createError(400, 'User ID must be a valid number'));
         }
@@ -80,6 +82,7 @@ userController.updateUserInfo = async (req, res, next) => {
         next(err);
     }
 };
+
 userController.deleteUser = async(req,res,next) => {
     try {
         const userId = req.user.id;
@@ -94,8 +97,6 @@ userController.deleteUser = async(req,res,next) => {
         next(err)
     }
 }
-
-
 
 
 module.exports = userController;

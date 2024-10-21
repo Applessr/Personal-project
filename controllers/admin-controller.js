@@ -1,4 +1,6 @@
+const { search } = require("../routes/subscription-route");
 const adminServices = require("../services/admin-service");
+const searchServices = require("../services/Search-service");
 const createError = require("../utils/createError");
 
 const adminController = {};
@@ -111,6 +113,21 @@ adminController.deleteVocabulary = async (req, res, next) => {
         }
         const deletedVocabulary = await adminServices.deleteVocabList(vocabularyId);
         res.status(204).json({ message: 'Vocabulary deleted successfully', deletedVocabulary });
+    } catch (error) {
+        console.error('error from deleteVocabulary', error);
+        next(error);
+    }
+};
+
+adminController.getUserSearchHis = async (req, res, next) => {
+    try {
+        const userRole = req.user.role;
+        if (userRole !== 'ADMIN') {
+            return res.status(403).json({ message: "You don't have permission to delete vocabulary" });
+        }
+
+        const allSearch = await searchServices.getSearchAll();
+        res.status(200).json({ allSearch });
     } catch (error) {
         console.error('error from deleteVocabulary', error);
         next(error);

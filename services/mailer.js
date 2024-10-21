@@ -33,7 +33,34 @@ Spanify`,
     console.error('Error sending email:', error);
   }
 };
+const sendConfirmEmail = async (email, username, plan, amount) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'ยืนยันการสมัครเป็นสมาชิก',
+    text: `สวัสดี ${username},
+
+ขอขอบคุณที่เลือกสมัครสมาชิกกับเรา! เรารู้สึกตื่นเต้นที่คุณเป็นส่วนหนึ่งของชุมชนของเรา
+
+สถานะการสมัครสมาชิกของคุณเป็น ${plan} ราคา ${amount} เราหวังว่าคุณจะได้รับประสบการณ์ที่ดีจากบริการของเรา
+
+หากคุณมีคำถามหรือข้อสงสัยใด ๆ สามารถติดต่อเราได้ตลอดเวลา เรายินดีที่จะช่วยเสมอ
+
+ขอบคุณอีกครั้งที่เข้าร่วมกับเรา!
+
+ด้วยความเคารพ,
+Spanify`,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
 
 module.exports = {
-  sendResetEmail
+  sendResetEmail,
+  sendConfirmEmail
 };

@@ -14,5 +14,8 @@ router.post('/vocabulary/:categoryId', adminController.addVocabulary);
 router.patch('/vocabulary/:vocabularyId', adminController.updateVocabulary); 
 router.delete('/vocabulary/:vocabularyId', adminController.deleteVocabulary);
 
+//Search history 
+router.get('/user-search', adminController.getUserSearchHis) 
+
 
 module.exports = router;

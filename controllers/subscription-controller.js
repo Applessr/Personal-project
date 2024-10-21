@@ -1,3 +1,4 @@
+const { sendConfirmEmail } = require("../services/mailer");
 const omiseServices = require("../services/omise");
 const subscriptionServices = require("../services/subscription-services");
 const createError = require("../utils/createError");
@@ -8,7 +9,6 @@ const subscriptionController = {};
 subscriptionController.checkSubscription = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        console.log(user, 'user')
 
         if (!userId) {
             return next(createError(400, 'userId is required'));
@@ -97,7 +97,6 @@ subscriptionController.createCharge = async (req, res, next) => {
     try {
         const user = req.user;
 
-        // ตรวจสอบว่าผู้ใช้มีอยู่
         if (!user) {
             return res.status(400).json({ message: 'User is required' });
         }
@@ -107,7 +106,6 @@ subscriptionController.createCharge = async (req, res, next) => {
             return res.status(400).json({ message: 'Plan and token are required' });
         }
 
-        // สร้างลูกค้า
         const customer = await omiseServices.createCustomer(user.email, plan, token);
 
         const priceMap = {
@@ -116,10 +114,24 @@ subscriptionController.createCharge = async (req, res, next) => {
             TWELVE_MONTH: 713 * 100,
         };
 
+        const selectPlan = {
+            ONE_MONTH: '1เดือน',
+            SIX_MONTH: '6เดือน',
+            TWELVE_MONTH: '12เดือน'
+        }
+        const planMessage = selectPlan[plan] || 'แผนไม่ถูกต้อง'
+
         const amount = priceMap[plan];
         if (!amount) {
             return res.status(400).json({ message: 'Invalid plan selected' });
         }
+
+        const amountPrice = {
+            9900: '99 บาท',
+            50500: '505 บาท',
+            71300: '713 บาท'
+        }
+        const amountMessage = amountPrice[amount] || 'แผนไม่ถูกต้อง'
 
         const charge = await omiseServices.createSubscription(amount, plan, customer);
 
@@ -127,6 +139,7 @@ subscriptionController.createCharge = async (req, res, next) => {
             return res.json({ message: "Payment pending", charge });
         } else if (charge.status === "successful") {
             const subscription = await subscriptionServices.createSubscription(user.id, plan);
+            // await sendConfirmEmail(user.email, user.username, planMessage, amountMessage)
             return res.json({
                 message: "Payment successful",
                 subscription,
@@ -169,7 +182,7 @@ subscriptionController.createBankCharge = async (req, res, next) => {
             return res.json({ message: "Payment pending", charge });
         } else if (charge.status === "successful") {
             const subscription = await subscriptionServices.createSubscription(userId, plan);
-
+            // await sendConfirmEmail(user.email, user.username, planMessage, amountMessage)
             return res.json({
                 message: "Payment successful",
                 subscription,

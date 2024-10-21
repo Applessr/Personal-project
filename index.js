@@ -24,9 +24,8 @@ app.use('/user/user-progress',authenticate,userProgressRouter)
 
 app.use('/admin',authenticate,adminRouter)
 
-
-app.use(handlerError);
 app.use('*', notFoundHandler);
+app.use(handlerError);
 
 
 
