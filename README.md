@@ -14,13 +14,13 @@ EMAIL_PASS
 
 ---
 # ER DIAGRAM
-![alt text](https://i.imgur.com/mrgxsy2.png) 
+![alt text](https://i.imgur.com/1F03VEA.png) 
 
 # API ENDPOINT GUIDELINE
 
 <br>
 
-# /auth [x]
+# /auth [x] http://localhost:5000/auth
 
 | Name            | Endpoint         | Method | Request Body                                | Response Body                                              | Response Status Code | Remark                          |
 | --------------- | ---------------- | ------ | ------------------------------------------- | ---------------------------------------------------------- | -------------------- | ------------------------------- |
@@ -38,7 +38,7 @@ EMAIL_PASS
 <br>
 
 
-# /user [X]
+# /user [X] http://localhost:5000/user
 
 | Name                            | Endpoint                   | Method | Request Body                                                                             | Response Body                                                                                                                                                               | Response Status Code | Remark             |
 | ------------------------------- | -------------------------- | ------ | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------ |
@@ -63,7 +63,7 @@ EMAIL_PASS
 <br>
 <br>
 
-# /user/user-progress/ [X]
+# /user/user-progress/ [X] http://localhost:5000/user/user-progress
 
 
 | Name      | Endpoint  | Method | Request Body    | Response Body          | Response Status Code | Remark             |
@@ -76,7 +76,7 @@ EMAIL_PASS
 
 <hr>
 
-# /admin [x]
+# /admin [x] http://localhost:5000/admin
 
 
 | Name   | Endpoint  | Method | Request Body    | Response Body   | Response Status Code | Remark    |
@@ -90,3 +90,12 @@ EMAIL_PASS
 
 
 <hr>
+
+# /subscription [x] http://localhost:5000/subscription
+
+
+| Name   | Endpoint  | Method | Request Body    | Response Body   | Response Status Code | Remark    |
+| ------------------------- | ------------------- | ------ | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------ |
+| check subscript  | /check| GET | -  | `{active:"", subscription: {id:"", startDate: "", endDate: "", status: "", plan: "", createdAt: "", updatedAt: "", userId: "", user:{id: "", username: "", email: "", role: "",}}, message: ""}` | 200 | Authenticate token |
+| subscription by credit-card | /charge-credit | POST    | `{ plan: "", omiseToken: "" }`  | `{message: "",subscription: "", charge: "" }`   | 201  | Authenticate token |
+| subscription by internet-banking | /charge-bank | POST  | `{ plan: "", omiseToken: "" }`  | `{message: "",subscription: "", charge: "" }`   | 201  | Authenticate token |

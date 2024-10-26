@@ -13,12 +13,15 @@ authController.register = async (req, res, next) => {
     try {
         const { username, email, password } = req.input;
 
-        const user = await authServices.getEmail(email);
+        const isEmail = await authServices.getEmail(email);
+        const isUserName = await authServices.getUsername(username);
 
-        if (user) {
-            return createError(400, 'User is already exist')
+        if (isEmail) {
+            return createError(400, 'This email is already exist')
         }
-
+        if (isUserName) {
+            return createError(400, 'This username is already exist')
+        }
         const hashPassword = await hashServices.hash(password);
 
         const result = await authServices.createUser({ username, email, password: hashPassword })
@@ -88,14 +91,13 @@ authController.loginGoogle = async (req, res, next) => {
     try {
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: '39419143806-v199ni5qi9f5dsda819hv0a1cfphp48s.apps.googleusercontent.com', // ตรวจสอบว่าเป็น client ID ของคุณ
+            audience: process.env.GOOGLE_CLIENT_ID, 
         });
 
         const payloadFromGoogle = ticket.getPayload();
         const googleId = payloadFromGoogle['sub'];
         const email = payloadFromGoogle['email'];
         const name = payloadFromGoogle['name'];
-
  
         let user = await authServices.findUserByGoogleId(googleId);
 

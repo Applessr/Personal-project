@@ -1,38 +1,38 @@
 const prisma = require('../config/prisma');
-const crypto = require('crypto');
+
 
 
 const authServices = {};
 
-authServices.getEmail = async(email) => {
+authServices.getEmail = async (email) => {
     return await prisma.user.findUnique({
         where: {
             email: email,
         },
     });
 };
-authServices.getUsername = async(username) => {
+authServices.getUsername = async (username) => {
     return await prisma.user.findUnique({
         where: {
             username,
         },
     });
 };
-authServices.findUserById = async(id) => {
+authServices.findUserById = async (id) => {
     return await prisma.user.findUnique({
         where: {
             id: Number(id),
         },
     });
 };
-authServices.findUserByGoogleId= async(googleId) => {
+authServices.findUserByGoogleId = async (googleId) => {
     return await prisma.user.findUnique({
         where: {
             googleId: googleId,
         },
     });
 };
-authServices.createUser = async(data) => {
+authServices.createUser = async (data) => {
     return await prisma.user.create({
         data,
     });
@@ -40,10 +40,10 @@ authServices.createUser = async(data) => {
 authServices.createGoogleUser = async (data) => {
     return await prisma.user.create({
         data: {
-            googleId: data.googleId, 
+            googleId: data.googleId,
             email: data.email,
             username: data.username,
-            password: '', 
+            password: '',
         },
     });
 };
@@ -55,20 +55,26 @@ authServices.updateUser = async (id, data) => {
         data: data,
     });
 };
-authServices.getCurrentUser = async(email) => {
+authServices.getCurrentUser = async (email) => {
     return await prisma.user.findUnique({
         where: {
-            email: email,
+            email: email
         },
         select: {
             id: true,
             username: true,
             email: true,
             role: true,
-        },
+            Subscription: {
+                select: {
+                    status: true,
+                    plan: true
+                }
+            }
+        }
     });
 };
-authServices.updateResetPassword = async(email, token, expiryDate) => {
+authServices.updateResetPassword = async (email, token, expiryDate) => {
     return await prisma.user.update({
         where: {
             email: email,
@@ -79,17 +85,17 @@ authServices.updateResetPassword = async(email, token, expiryDate) => {
         },
     });
 };
-authServices.updatePassword = async(userId, hashedPassword) => {
+authServices.updatePassword = async (userId, hashedPassword) => {
     return await prisma.user.update({
-        where: { 
-            id: Number(userId) 
+        where: {
+            id: Number(userId)
         },
         data: {
-          password: hashedPassword,
-          resetPasswordToken: null,
-          resetPasswordExpires: null,
+            password: hashedPassword,
+            resetPasswordToken: null,
+            resetPasswordExpires: null,
         },
-      });
+    });
 };
 
 module.exports = authServices;

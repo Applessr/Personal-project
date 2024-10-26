@@ -11,6 +11,13 @@ adminServices.getAllUser = async () => {
                 email: true,
                 role: true,
                 createdAt: true,
+                Subscription: {
+                    select: {
+                        status: true,
+                        plan: true,
+                        createdAt: true
+                    },
+                },
             },
         });
         return users;
@@ -38,17 +45,17 @@ adminServices.updateUserRole = async (userId, role) => {
 adminServices.getVocabList = async (categoryId) => {
     try {
         const vocabList = await prisma.vocabulary.findMany({
-            where : {
+            where: {
                 categoryId: Number(categoryId)
             }
         });
-        return vocabList;  
+        return vocabList;
     } catch (error) {
         console.error("Error getVocabList:", error);
-        throw error;  
+        throw error;
     }
 };
-adminServices.addVocabulary = async (newVocabulary,categoryId) => {
+adminServices.addVocabulary = async (newVocabulary, categoryId) => {
     try {
         const existingVocabulary = await prisma.vocabulary.findFirst({
             where: {
@@ -69,7 +76,7 @@ adminServices.addVocabulary = async (newVocabulary,categoryId) => {
                 wordTh: newVocabulary.wordTh,
                 wordEs: newVocabulary.wordEs,
                 image: newVocabulary.image,
-                categoryId:  Number(categoryId),
+                categoryId: Number(categoryId),
             },
         });
         return {
@@ -81,10 +88,10 @@ adminServices.addVocabulary = async (newVocabulary,categoryId) => {
         throw error;
     }
 };
-adminServices.updateVocab = async (vocabularyId,updateData) => {
+adminServices.updateVocab = async (vocabularyId, updateData) => {
     return await prisma.vocabulary.update({
         where: {
-            id: Number(vocabularyId), 
+            id: Number(vocabularyId),
         },
         data: {
             wordTh: updateData.wordTh,

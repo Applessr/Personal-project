@@ -3,21 +3,21 @@ const createError = require("../utils/createError");
 
 const searchController = {};
 
-searchController.getSearch = async(req,res,next) => {
+searchController.getSearch = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        if(!userId) {
-            return createError(400,'user ID is require')
-        }     
+        if (!userId) {
+            return createError(400, 'user ID is require')
+        }
 
         const getUserSearch = await searchServices.getSearch(userId);
-        if(!getUserSearch ||getUserSearch.length === 0) {
-            return createError(404,'no search history found')
+        if (!getUserSearch ) {
+            return createError(404, 'no search history found')
         }
 
         res.status(200).json(getUserSearch)
-    }catch(err) {
-        console.log('error form getSearch',err)
+    } catch (err) {
+        console.log('error form getSearch', err)
         next(err)
     }
 }
@@ -37,7 +37,7 @@ searchController.createSearch = async (req, res, next) => {
         if (searchHistory.length >= 20) {
             const oldestSearch = searchHistory.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))[0];
             if (oldestSearch) {
-                await searchServices.deleteSearch(oldestSearch.id); 
+                await searchServices.deleteSearch(oldestSearch.id);
             }
         }
 
@@ -48,22 +48,26 @@ searchController.createSearch = async (req, res, next) => {
         next(err);
     }
 };
-searchController.deleteSearch = async(req,res,next) => {
+searchController.deleteSearch = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        if(!userId) {
-            return createError(400,'user ID is require')
+        if (!userId) {
+            return createError(400, 'user ID is require')
         }
 
         const { historyId } = req.params;
         if (!historyId) {
             return res.status(400).json({ message: 'Search ID is required' });
         }
+
+        const search = await searchServices.deleteSearch(userId, historyId);
+        if (!search) {
+            return res.status(404).json({ message: 'Search history not found' });
+        }
         
-        const search = await searchServices.deleteSearch(userId,historyId);
-        res.status(204).json({message: 'Search history deleted successfully'});
-    }catch (err) {
-        console.log('error form deleteSearch',err)
+        res.status(204).json({ message: 'Search history deleted successfully' });
+    } catch (err) {
+        console.log('error form deleteSearch', err)
         next(err)
     }
 }

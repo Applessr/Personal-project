@@ -1,4 +1,3 @@
-const { number } = require("joi");
 const prisma = require("../config/prisma");
 
 const userServices = {};

@@ -6,6 +6,7 @@ const authRouter = require('./routes/auth-route')
 const userRouter = require('./routes/user-route')
 const adminRouter = require('./routes/admin-route')
 const userProgressRouter = require('./routes/userProgress-route')
+const subscriptionRouter = require('./routes/subscription-route')
 const authenticate = require('./middlewares/authentication');
 
 
@@ -16,14 +17,15 @@ app.use(express.json()); //middlewere
 
 app.use('/auth', authRouter)
 
+app.use('/subscription',authenticate, subscriptionRouter)
+
 app.use('/user',userRouter)
 app.use('/user/user-progress',authenticate,userProgressRouter)
 
 app.use('/admin',authenticate,adminRouter)
 
-
-app.use(handlerError);
 app.use('*', notFoundHandler);
+app.use(handlerError);
 
 
 

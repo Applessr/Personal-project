@@ -2,6 +2,19 @@ const prisma = require("../config/prisma");
 
 const searchServices = {};
 
+searchServices.getSearchAll = async () => {
+  return await prisma.searchHistory.findMany({
+    select: {
+      id: true,
+      searchTerm: true,
+      userId: true,
+      createdAt: true
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+};
 searchServices.getSearch = async (userId) => {
   return await prisma.searchHistory.findMany({
     where: {

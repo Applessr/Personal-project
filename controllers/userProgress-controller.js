@@ -10,7 +10,7 @@ userProgressController.getAllProgress = async (req, res, next) => {
             return createError(400,'user ID is require')
         } 
         const progress = await userServices.getAllProgress(userId);
-        if(!progress || progress.length === 0 ) {
+        if(!progress ) {
             return createError(404,'no progress found')
         }
         res.status(200).json(progress);
