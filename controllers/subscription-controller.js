@@ -131,6 +131,7 @@ subscriptionController.createCharge = async (req, res, next) => {
             50500: '505 บาท',
             71300: '713 บาท'
         }
+        
         const amountMessage = amountPrice[amount] || 'แผนไม่ถูกต้อง'
 
         const charge = await omiseServices.createSubscription(amount, plan, customer);

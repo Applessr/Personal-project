@@ -14,7 +14,7 @@ EMAIL_PASS
 
 ---
 # ER DIAGRAM
-![alt text](https://i.imgur.com/mrgxsy2.png) 
+![alt text](https://i.imgur.com/1F03VEA.png) 
 
 # API ENDPOINT GUIDELINE
 
