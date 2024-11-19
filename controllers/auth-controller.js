@@ -11,7 +11,7 @@ const client = new OAuth2Client('39419143806-v199ni5qi9f5dsda819hv0a1cfphp48s.ap
 
 authController.register = async (req, res, next) => {
     try {
-        const { username, email, password } = req.input;
+        const { username, email, password } = req.body;
 
         const isEmail = await authServices.getEmail(email);
         const isUserName = await authServices.getUsername(username);

@@ -32,11 +32,7 @@ userController.updateUserInfo = async (req, res, next) => {
             return createError(400,'Check token expired date')
         }
         const {  username, email, currentPassword, newPassword, confirmPassword } = req.body;
-        if (!userId) {
-            return next(createError(400, 'User ID should be provided'));
-        }
 
-        console.log( currentPassword, newPassword, confirmPassword,' currentPassword, newPassword, confirmPassword')
         
         if (typeof userId !== 'number' || isNaN(userId)) {
             return next(createError(400, 'User ID must be a valid number'));
