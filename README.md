@@ -12,6 +12,11 @@ EMAIL_USER
 
 EMAIL_PASS
 
+OMISE_PUBLIC_KEY
+
+OMISE_SECRET_KEY
+
+GOOGLE_CLIENT_ID
 ---
 # ER DIAGRAM
 ![alt text](https://i.imgur.com/1F03VEA.png) 
